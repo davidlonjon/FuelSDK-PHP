@@ -4,8 +4,8 @@ require('JWT.php');
 
 class ET_Client extends SoapClient {
 	public $packageName, $packageFolders, $parentFolders;
-	private $wsdlLoc, $debugSOAP, $lastHTTPCode, $clientId, 
-			$clientSecret, $appsignature, $endpoint, 
+	private $wsdlLoc, $debugSOAP, $lastHTTPCode, $clientId,
+			$clientSecret, $appsignature, $authUrl, $endpoint,
 			$tenantTokens, $tenantKey, $xmlLoc;
 		
 	function __construct($getWSDL = false, $debug = false, $params = null) {	
@@ -22,6 +22,7 @@ class ET_Client extends SoapClient {
 			$this->clientId = $config['clientid'];
 			$this->clientSecret = $config['clientsecret'];
 			$this->appsignature = $config['appsignature'];
+			$this->authUrl = $config['authUrl'];
 			if (array_key_exists('xmlloc', $config)){$this->xmlLoc = $config['xmlloc'];}
 		} else {
 			if ($params && array_key_exists('defaultwsdl', $params)){$this->wsdlLoc = $params['defaultwsdl'];}
@@ -30,6 +31,7 @@ class ET_Client extends SoapClient {
 			if ($params && array_key_exists('clientsecret', $params)){$this->clientSecret = $params['clientsecret'];}
 			if ($params && array_key_exists('appsignature', $params)){$this->appsignature = $params['appsignature'];}
 			if ($params && array_key_exists('xmlloc', $params)){$this->xmlLoc = $params['xmlloc'];}
+			if ($params && array_key_exists('authUrl', $params)){$this->authUrl = $params['authUrl'];}
 		}
 		
 		$this->debugSOAP = $debug;
@@ -85,7 +87,7 @@ class ET_Client extends SoapClient {
 
 			if (is_null($this->getAuthToken($this->tenantKey)) || ($timeDiff < 5) || $forceRefresh  ){
 				$url = $this->tenantKey == null 
-						? "https://auth.exacttargetapis.com/v1/requestToken?legacy=1"
+						? $this->authUrl
 						: "https://www.exacttargetapis.com/provisioning/v1/tenants/{$this->tenantKey}/requestToken?legacy=1";
 				$jsonRequest = new stdClass(); 
 				$jsonRequest->clientId = $this->clientId;

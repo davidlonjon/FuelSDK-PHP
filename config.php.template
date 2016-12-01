@@ -5,4 +5,5 @@ return array(
 	'clientsecret' => 'CCCCCCCCCCCCCCCCCCCCCCC',
 	'defaultwsdl' => 'https://webservice.exacttarget.com/etframework.wsdl',
     'xmlloc' => '/some/path/to/cache/ExactTargetWSDL.xml',
+    'authUrl' => 'https://auth.exacttargetapis.com/v1/requestToken?legacy=1',
 );
